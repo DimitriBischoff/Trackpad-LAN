@@ -3,8 +3,8 @@
 
 ## Get IP local
 
-get local ip address from server
-Windows+R => cmd => ipconfig
+get local ip address from server  
+Windows+R => cmd => ipconfig  
 change ip index.html: line 422. '{YOUR_LOCAL_IP}'
 
 
