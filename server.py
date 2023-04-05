@@ -1,3 +1,4 @@
+#!C:\venv\Scripts\python.exe
 # coding: utf-8
 
 import asyncio
@@ -37,11 +38,12 @@ class WebSocketServer:
 
 
     def keyboard(self, raw):
-        key = struct.unpack('B', raw)[0]
-        debug(raw, key)
-        win32api.keybd_event(key, 0, 0, 0)
-        time.sleep(.1)
-        win32api.keybd_event(key, 0, win32con.KEYEVENTF_EXTENDEDKEY, 0) 
+        key, down = struct.unpack('B?', raw)
+        # debug(raw, key, down)
+        if down:
+            win32api.keybd_event(key, 0, 0, 0)
+        else:
+            win32api.keybd_event(key, 0, win32con.KEYEVENTF_KEYUP, 0) 
 
     async def handle(self, ws, path):
         commands = [self.mouse, self.click, self.keyboard]
@@ -93,7 +95,7 @@ if __name__ == '__main__':
     ws = WebSocketServer(6661)
     ws.run()
 
-    debug("Trackpad online ready !")    
+    debug("Trackpad-LAN ready")    
     ws.wait()
     httpd.shutdown()
     th.join()

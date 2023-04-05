@@ -1,6 +1,13 @@
 # Trackpad LAN
 
 
+## Get IP local
+
+get local ip address from server
+Windows+R => cmd => ipconfig
+change ip index.html: line 422. '{YOUR_LOCAL_IP}'
+
+
 ## Launch server
 
 ```console
@@ -11,13 +18,6 @@ python server.py
 ```
 
 
-## Get IP local
-
-get local ip address from server
-
-Windows+R => cmd => ipconfig
-
 
 ## Connect
-
 http://{IP_LOCAL}:6660
