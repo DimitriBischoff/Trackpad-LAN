@@ -190,7 +190,7 @@
               }
               else {
                 down(key);
-                if ([16, 17, 18, 20, 93].indexOf(key.code) == -1) {
+                if ([16, 17, 18, 20, 91, 93].indexOf(key.code) == -1) {
                   key.repeatTimeout = setTimeout(() => { keypress(e, key); }, 500);
                 }
               }
