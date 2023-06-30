@@ -419,7 +419,7 @@
 
         return async (msg) => {
           if (!socket || socket.readyState != WebSocket.OPEN) {
-            socket = new WebSocket('ws://{YOUR_LOCAL_IP}:6661');
+            socket = new WebSocket(`ws://${window.location.hostname}:6661`);
             let ready = new Promise(r => {
               socket.onopen = (event) => {
                 console.log('ws open');

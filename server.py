@@ -90,14 +90,15 @@ def run_server_http(port):
     return httpd, th
 
 if __name__ == '__main__':
+    import socket
+
     httpd, th = run_server_http(6660)
 
     ws = WebSocketServer(6661)
     ws.run()
 
-    debug("Trackpad-LAN ready")    
+    debug("Trackpad-LAN ready")
+    debug(f'http://{socket.gethostbyname_ex(socket.gethostname())[-1][-1]}:6660')
     ws.wait()
     httpd.shutdown()
     th.join()
-
-
