@@ -415,24 +415,29 @@
 
     <script>
       const ws_send = (() => {
+        const ws_url = `ws://${window.location.hostname}:6661`;
         let socket = null;
+        let ready = 0;
+
+        console.log("ws_url:", ws_url);
 
         return async (msg) => {
-          if (!socket || socket.readyState != WebSocket.OPEN) {
-            socket = new WebSocket(`ws://${window.location.hostname}:6661`);
-            let ready = new Promise(r => {
+          if (ready == 0) {
+            socket = new WebSocket(ws_url);
+            ready = 1;
+            ready = await new Promise(r => {
+              console.log(`Connexion ws sur :${ws_url}`);
               socket.onopen = (event) => {
                 console.log('ws open');
-                r(true);
+                r(2);
               }
               socket.onerror = (event) => {
-                r(false);
+                r(0);
               }
             });
-            if (!await ready) return;
           }
-          // console.log(msg);
-          socket.send(msg);
+          if (ready == 2)
+           socket.send(msg);
         }
       })();
 
