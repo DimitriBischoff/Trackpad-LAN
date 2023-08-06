@@ -30,12 +30,9 @@ class WebSocketServer:
         win32api.SetCursorPos((_x + x, _y + y))
 
     def click(self, raw):
-        button = struct.unpack('b', raw)[0]
-        # debug(raw, button)
-        win32api.mouse_event(MOUSE_EVENT_DOWN[button], 0, 0)
-        time.sleep(.1)
-        win32api.mouse_event(MOUSE_EVENT_UP[button], 0, 0)
-
+        button, down = struct.unpack('B?', raw)
+        # debug(raw, button, down)
+        win32api.mouse_event(MOUSE_EVENT_DOWN[button] if down else MOUSE_EVENT_UP[button], 0, 0)
 
     def keyboard(self, raw):
         key, down = struct.unpack('B?', raw)
@@ -46,6 +43,7 @@ class WebSocketServer:
             win32api.keybd_event(key, 0, win32con.KEYEVENTF_KEYUP, 0) 
 
     async def handle(self, ws, path):
+        debug(f'nouvelle connexion: [{path}] - {ws}')
         commands = [self.mouse, self.click, self.keyboard]
         try:
             async for raw in ws:
@@ -53,9 +51,9 @@ class WebSocketServer:
                     # debug(raw)
                     commands[raw[0]](raw[1:])
                 except Exception as e:
-                    debug(e)
+                    debug(f'error user: {e}')
         except Exception as e:
-            # debug(e)
+            # debug(f'error system: {e}')
             pass
             
 
@@ -63,6 +61,7 @@ class WebSocketServer:
         debug(f'Server websocket run :{self.port}')
         self.server = serve(self.handle, '0.0.0.0', self.port)
         asyncio.get_event_loop().run_until_complete(self.server)
+        debug("ws stop")
 
     def wait(self):
         try:
@@ -83,6 +82,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def run_server_http(port):
     import threading
+
+    debug("version: 0.1.0")
     httpd = socketserver.TCPServer(("0.0.0.0", port), Handler)
     th = threading.Thread(target=httpd.serve_forever)
     th.start()
@@ -102,3 +103,5 @@ if __name__ == '__main__':
     ws.wait()
     httpd.shutdown()
     th.join()
+
+

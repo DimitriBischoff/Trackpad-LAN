@@ -190,7 +190,7 @@
               }
               else {
                 down(key);
-                if ([16, 17, 18, 20, 91, 93].indexOf(key.code) == -1) {
+                if ([16, 17, 18, 20, 93, 91].indexOf(key.code) == -1) {
                   key.repeatTimeout = setTimeout(() => { keypress(e, key); }, 500);
                 }
               }
@@ -359,14 +359,13 @@
         <span id='keyboard' disabled class='icon'>&#9000;</span>
       </div>
       <div id='buttons'>
-        <button id='leftClick'></button>
-        <button id='middleClick'></button>
-        <button id='rightClick'></button>
+        <button id='leftButton'></button>
+        <button id='middleButton'></button>
+        <button id='rightButton'></button>
       </div>
       <script>
       (function() {
         const SPEED = [1, 3, 5, 7, 11];
-        let move = [];
 
         function limit(num, min, max) {
           if (num < min) return min;
@@ -380,48 +379,73 @@
           else
             document.exitFullscreen();
         };
-        
-        const leftclick = () => ws_send(new Int8Array([1, 0]));
-        const middleclick = () => ws_send(new Int8Array([1, 1]));
-        const rightclick = () => ws_send(new Int8Array([1, 2]));
-        
-        leftClick.onclick = leftclick;
-        middleClick.onclick = middleclick;
-        rightClick.onclick = rightclick;
 
-        pad.ontouchstart = (e) => move.push(new Int32Array([e.touches[0].screenX, e.touches[0].screenY]));
+        let MOUSE = {
+          LEFT: 0,
+          MIDDLE: 1,
+          RIGHT: 2,
+          STATE: {
+            down: false,
+            move: []
+          },
+          CLICK: (button, down) => () => {ws_send_bytes([1, button, down]); MOUSE.STATE.down = down;}
+        };
+
+        leftButton.onpointerdown = MOUSE.CLICK(MOUSE.LEFT, true);
+        leftButton.onpointerup = MOUSE.CLICK(MOUSE.LEFT, false);
+
+        rightButton.onpointerdown = MOUSE.CLICK(MOUSE.RIGHT, true);
+        rightButton.onpointerup = MOUSE.CLICK(MOUSE.RIGHT, false);
+
+        middleButton.onpointerdown = MOUSE.CLICK(MOUSE.MIDDLE, true);
+        middleButton.onpointerup = MOUSE.CLICK(MOUSE.MIDDLE, false);
+
+        pad.ontouchstart = (e) => {
+          let touch_index = (MOUSE.STATE.down && e.touches.length > 1) ? 1 : 0;
+          MOUSE.STATE.move.unshift(new Int32Array([e.touches[touch_index].screenX, e.touches[touch_index].screenY]));
+        }
         pad.ontouchmove = async (e) => {
           // console.log(e);
-          move.unshift(new Int32Array([e.touches[0].screenX, e.touches[0].screenY]));
-          if (move.length > 2) {
-            move.pop();
+          let touch_index = (MOUSE.STATE.down && e.touches.length > 1) ? 1 : 0;
+          MOUSE.STATE.move.unshift(new Int32Array([e.touches[touch_index].screenX, e.touches[touch_index].screenY]));
+          if (MOUSE.STATE.move.length > 2) {
+            MOUSE.STATE.move.pop();
           }
 
           let speed = SPEED[padSenditive.value];
           let data = new Int8Array([
             0,
-            limit((move[0][0] - move[1][0]) * speed, -128, 127), 
-            limit((move[0][1] - move[1][1]) * speed, -128, 127)
+            limit((MOUSE.STATE.move[0][0] - MOUSE.STATE.move[1][0]) * speed, -128, 127),
+            limit((MOUSE.STATE.move[0][1] - MOUSE.STATE.move[1][1]) * speed, -128, 127)
           ]);
 
           await ws_send(data);
         };
-        pad.ontouchend = () => {if (move.length < 2) leftclick()};
-        window.ontouchend = () => {move = []};
+        pad.ontouchend = async () => {if (MOUSE.STATE.move.length < 2) {
+          leftButton.onpointerdown();
+          await sleep(0.1);
+          leftButton.onpointerup();
+        }};
+        window.ontouchend = () => {MOUSE.STATE.move = []};
 
       })()
       </script>
     </template>
 
     <script>
+        let ready = 0;
+
+        const sleep = async (t) => new Promise(r => setTimeout(r, t));
+
       const ws_send = (() => {
         const ws_url = `ws://${window.location.hostname}:6661`;
+        // alert(ws_url)
         let socket = null;
-        let ready = 0;
 
         console.log("ws_url:", ws_url);
 
         return async (msg) => {
+          // console.log(ready);
           if (ready == 2 && (socket && socket.readyState == WebSocket.CLOSED)) {
             socket.close();
             ready = 0;
@@ -445,6 +469,8 @@
            socket.send(msg);
         }
       })();
+
+      const ws_send_bytes = async (data) => await ws_send(new Int8Array(data));
 
       const changeTemplate = (() => {
         const templates = [
