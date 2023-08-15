@@ -1,96 +1,96 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Trackpad</title>
-    <meta charset='utf-8'/>
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<head>
+  <title>Trackpad</title>
+  <meta charset='utf-8'/>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      width: 100vw;
+      user-select: none;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='app'></div>
+
+  <template id='templateKeyboard'>
     <style>
-      body {
-        margin: 0;
-        background: black;
-        width: 100vw;
-        user-select: none;
+      #keyboard {
+        padding: 1%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: space-between;
+        flex: 1;
       }
-      #app {
-        width: 100%;
-        height: 100%;
+      .button {
+        border-radius: 10%;
+        height: 11vh;
+        background: #383d49;
+        color: white;
+        font-family: 'consolas';
+        padding: 1vh 1vw;
+        font-size: 5vh;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+      }
+      .button[pressed] {
+        outline: 1px solid red;
+      }
+      .hide {
+        visibility: hidden;
+      }
+      .win {
+        display: flex;
+        justify-content: center;
+      }
+      .button span {
+        display: block;
+        line-height: 5vh;
+      }
+      .line {
+        display: flex;
+        flex-direction: row;
+        width: 81vw;
+        height: 70vh;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .line:nth-child(1) {
+        height: auto;
+      }
+      .line:nth-child(3) {
+        width: 15.8vw;
+      }
+      #fullscreen {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: white;
+        font-size: 2rem;
+        line-height: 2rem;
+        margin: 0.5rem;
+      }
+      #fullscreen:hover {
+        cursor: pointer;
       }
     </style>
-  </head>
-
-  <body>
-    <div id='app'></div>
-
-    <template id='templateKeyboard'>
-      <style>
-        #keyboard {
-          padding: 1%;
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: row;
-          justify-content: space-between;
-          align-content: space-between;
-          flex: 1;
-        }
-        .button {
-          border-radius: 10%;
-          height: 11vh;
-          background: #383d49;
-          color: white;
-          font-family: 'consolas';
-          padding: 1vh 1vw;
-          font-size: 5vh;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          overflow: hidden;
-        }
-        .button[pressed] {
-          outline: 1px solid red;
-        }
-        .hide {
-          visibility: hidden;
-        }
-        .win {
-          display: flex;
-          justify-content: center;
-        }
-        .button span {
-          display: block;
-          line-height: 5vh;
-        }
-        .line {
-          display: flex;
-          flex-direction: row;
-          width: 81vw;
-          height: 70vh;
-          justify-content: space-between;
-          flex-wrap: wrap;
-        }
-        .line:nth-child(1) {
-          height: auto;
-        }
-        .line:nth-child(3) {
-          width: 15.8vw;
-        }
-        #fullscreen {
-          position: absolute;
-          top: 0;
-          right: 0;
-          color: white;
-          font-size: 2rem;
-          line-height: 2rem;
-          margin: 0.5rem;
-        }
-        #fullscreen:hover {
-          cursor: pointer;
-        }
-      </style>
-      <span id='fullscreen' class='icon'>&#x26F6;</span>
-      <div id='keyboard'></div>
-      <script>
+    <span id='fullscreen' class='icon'>&#x26F6;</span>
+    <div id='keyboard'></div>
+    <script>
       (function() {
         fullscreen.onclick = () => {
           if (!document.fullscreenElement)
@@ -118,13 +118,13 @@
           let button = K('', '', size, code)
           button.classList.add('win');
           button.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.3 87.6" style="height: 60%; margin: auto;">
-              <polyline points="0 12.5 35.7 7.6 35.7 42.1 0 42.1"/>
-              <polyline points="40 6.9 87.3 0 87.3 41.8 40 41.8"/>
-              <polyline points="0 45.74 35.7 45.74 35.7 80.34 0 75.34"/>
-              <polyline points="40 46.2 87.3 46.2 87.3 87.6 40 80.9"/>
-           </svg>`;
-           return button;
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87.3 87.6" style="height: 60%; margin: auto;">
+          <polyline points="0 12.5 35.7 7.6 35.7 42.1 0 42.1"/>
+          <polyline points="40 6.9 87.3 0 87.3 41.8 40 41.8"/>
+          <polyline points="0 45.74 35.7 45.74 35.7 80.34 0 75.34"/>
+          <polyline points="40 46.2 87.3 46.2 87.3 87.6 40 80.9"/>
+          </svg>`;
+          return button;
         }
 
 
@@ -203,90 +203,90 @@
         app.ontouchmove = keyschange;
 
         let cols = [[
-          K('Esc', '', 1, 27),
-          ],[
-          K('~', '`', 1, 192),
-          K('!', '1', 1, 49),
-          K('@', '2', 1, 50),
-          K('#', '3', 1, 51),
-          K('$', '4', 1, 52),
-          K('%', '5', 1, 53),
-          K('^', '6', 1, 54),
-          K('&', '7', 1, 55),
-          K('*', '8', 1, 56),
-          K('(', '9', 1, 57),
-          K(')', '0', 1, 48),
-          K('_', '-', 1, 189),
-          K('+', '=', 1, 187),
-          K('Back', '', 3, 8),
-          
-          K('Tab', '', 2, 9),
-          K('Q', '', 1, 81),
-          K('W', '', 1, 87),
-          K('E', '', 1, 69),
-          K('R', '', 1, 82),
-          K('T', '', 1, 84),
-          K('Y', '', 1, 89),
-          K('U', '', 1, 85),
-          K('I', '', 1, 73),
-          K('O', '', 1, 79),
-          K('P', '', 1, 80),
-          K('[', '{', 1, 219),
-          K(']', '}', 1, 221),
-          K('\\', '|', 2, 220),
+        K('Esc', '', 1, 27),
+        ],[
+        K('~', '`', 1, 192),
+        K('!', '1', 1, 49),
+        K('@', '2', 1, 50),
+        K('#', '3', 1, 51),
+        K('$', '4', 1, 52),
+        K('%', '5', 1, 53),
+        K('^', '6', 1, 54),
+        K('&', '7', 1, 55),
+        K('*', '8', 1, 56),
+        K('(', '9', 1, 57),
+        K(')', '0', 1, 48),
+        K('_', '-', 1, 189),
+        K('+', '=', 1, 187),
+        K('Back', '', 3, 8),
 
-          K('Maj', '', 2.5, 20),
-          K('A', '', 1, 65),
-          K('S', '', 1, 83),
-          K('D', '', 1, 68),
-          K('F', '', 1, 70),
-          K('G', '', 1, 71),
-          K('H', '', 1, 72),
-          K('J', '', 1, 74),
-          K('K', '', 1, 75),
-          K('L', '', 1, 76),
-          K(':', ';', 1, 186),
-          K('"', '\'', 1, 222),
-          K('Enter', '', 3.33, 13),
+        K('Tab', '', 2, 9),
+        K('Q', '', 1, 81),
+        K('W', '', 1, 87),
+        K('E', '', 1, 69),
+        K('R', '', 1, 82),
+        K('T', '', 1, 84),
+        K('Y', '', 1, 89),
+        K('U', '', 1, 85),
+        K('I', '', 1, 73),
+        K('O', '', 1, 79),
+        K('P', '', 1, 80),
+        K('[', '{', 1, 219),
+        K(']', '}', 1, 221),
+        K('\\', '|', 2, 220),
 
-          K('Shift', '', 3.33, 16),
-          K('Z', '', 1, 90),
-          K('X', '', 1, 88),
-          K('C', '', 1, 67),
-          K('V', '', 1, 86),
-          K('B', '', 1, 66),
-          K('N', '', 1, 78),
-          K('M', '', 1, 77),
-          K('<', ',', 1, 188),
-          K('>', '.', 1, 190),
-          K('?', '/', 1, 191),
-          K('Shift', '', 4.33, 16),
+        K('Maj', '', 2.5, 20),
+        K('A', '', 1, 65),
+        K('S', '', 1, 83),
+        K('D', '', 1, 68),
+        K('F', '', 1, 70),
+        K('G', '', 1, 71),
+        K('H', '', 1, 72),
+        K('J', '', 1, 74),
+        K('K', '', 1, 75),
+        K('L', '', 1, 76),
+        K(':', ';', 1, 186),
+        K('"', '\'', 1, 222),
+        K('Enter', '', 3.33, 13),
 
-          K('Ctrl', '', 1.7, 17),
-          W(1.7, 91),
-          K('Alt', '', 1.7, 18),
-          K('', '', 9, 32),
-          K('Alt', '', 1.7, 18),
-          W(1.7, 91),
-          K('&#9776;', '', 1.7, 93),
-          K('Ctrl', '', 1.7, 17),
-          ], [
-          K('Ins', '', 1, 45),
-          K('Home', '', 1, 36),
-          K('Up', '', 1, 33),
-          K('Del', '', 1, 46),
-          K('End', '', 1, 35),
-          K('Down', '', 1, 34),
-          N(1),
-          N(1),
-          N(1),
-          N(1),
-          K('↑', '', 1, 38),
-          N(1),
-          K('←', '', 1, 37),
-          K('↓', '', 1, 40),
-          K('→', '', 1, 39),
-          ]];
+        K('Shift', '', 3.33, 16),
+        K('Z', '', 1, 90),
+        K('X', '', 1, 88),
+        K('C', '', 1, 67),
+        K('V', '', 1, 86),
+        K('B', '', 1, 66),
+        K('N', '', 1, 78),
+        K('M', '', 1, 77),
+        K('<', ',', 1, 188),
+        K('>', '.', 1, 190),
+        K('?', '/', 1, 191),
+        K('Shift', '', 4.33, 16),
+
+        K('Ctrl', '', 1.7, 17),
+        W(1.7, 91),
+        K('Alt', '', 1.7, 18),
+        K('', '', 9, 32),
+        K('Alt', '', 1.7, 18),
+        W(1.7, 91),
+        K('&#9776;', '', 1.7, 93),
+        K('Ctrl', '', 1.7, 17),
+        ], [
+        K('Ins', '', 1, 45),
+        K('Home', '', 1, 36),
+        K('Up', '', 1, 33),
+        K('Del', '', 1, 46),
+        K('End', '', 1, 35),
+        K('Down', '', 1, 34),
+        N(1),
+        N(1),
+        N(1),
+        N(1),
+        K('↑', '', 1, 38),
+        N(1),
+        K('←', '', 1, 37),
+        K('↓', '', 1, 40),
+        K('→', '', 1, 39),
+        ]];
         for (let row of cols) {
           let line = document.createElement('div');
           line.classList.add('line');
@@ -297,73 +297,74 @@
         }
 
       })()
-      </script>
-    </template>
+    </script>
+  </template>
 
 
-    <template id='templateMouse'>
-      <style>
-        #pad {
-          flex: 1;
-        }
-        #buttons {
-          height: 10vh;
-          display: flex;
-          flex-direction: row;
-        }
-        #buttons button {
-          flex: 2;
-          margin: 1px;
-        }
-        #buttons button:nth-child(2) {
-          flex: 1;
-        }
-        #padSenditive {
-          width: 60vw;
-        }
-        #tools {
-          height: 10vh;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-evenly;
-        }
-        .icon {
-          color: white;
-          font-size: 2rem;
-          line-height: 2rem;
-          margin: auto 0;
-        }
-        .icon:hover {
-          cursor: pointer;
-        }
-        .icon[disabled] {
-          visibility: hidden;
-        }
-        #keyboardInput {
-          width: 0;
-          height: 0;
-          position: absolute;
-          border: none;
-          padding: 0;
-        }
-        #keyboardInput:focus {
-          border: none;
-          outline: none;
-        }
-      </style>
+  <template id='templateMouse'>
+    <style>
+      #pad {
+        flex: 1;
+      }
+      #buttons {
+        height: 10vh;
+        display: flex;
+        flex-direction: row;
+      }
+      #buttons button {
+        flex: 2;
+        margin: 1px;
+      }
+      #buttons button:nth-child(2) {
+        flex: 1;
+      }
+      #padSenditive {
+        width: 60vw;
+      }
+      #tools {
+        height: 10vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+      .icon {
+        color: white;
+        font-size: 2rem;
+        line-height: 2rem;
+        margin: auto 0;
+      }
+      .icon:hover {
+        cursor: pointer;
+      }
+      .icon[disabled] {
+        visibility: hidden;
+      }
+      #keyboardInput {
+        width: 0;
+        height: 0;
+        position: absolute;
+        border: none;
+        padding: 0;
+      }
+      #keyboardInput:focus {
+        border: none;
+        outline: none;
+      }
+    </style>
     <!-- <input id='keyboardInput'/> -->
-      <div id='pad'></div>
-      <div id='tools'>
-        <span id='fullscreen' class='icon'>&#x26F6;</span>
-        <input id='padSenditive' type="range" min="0" max="4" value="2" step="1">
-        <span id='keyboard' disabled class='icon'>&#9000;</span>
-      </div>
-      <div id='buttons'>
-        <button id='leftButton'></button>
-        <button id='middleButton'></button>
-        <button id='rightButton'></button>
-      </div>
-      <script>
+    <div id='pad'></div>
+    <div id='tools'>
+      <span id='fullscreen' class='icon'>&#x26F6;</span>
+      <input id='padSenditive' type="range" min="0" max="4" value="2" step="1">
+      <span id='keyboard' disabled class='icon'>&#9000;</span>
+    </div>
+    <div id='buttons'>
+      <button id='leftButton'></button>
+      <button id='middleButton'></button>
+      <button id='rightButton'></button>
+    </div>
+    <script>
+      var ext = {};
       (function() {
         const SPEED = [1, 3, 5, 7, 11];
 
@@ -391,6 +392,15 @@
           CLICK: (button, down) => () => {ws_send_bytes([1, button, down]); MOUSE.STATE.down = down;}
         };
 
+        const getTouch = (t) => new Int32Array([t.screenX, t.screenY]);
+        const debugTouches = (touches) => {
+          data = [];
+          for (var i = 0; i < touches.length; i++) {
+            data.push(getTouch(touches[i]).toString())
+          }
+          debug(data);
+        }
+
         leftButton.onpointerdown = MOUSE.CLICK(MOUSE.LEFT, true);
         leftButton.onpointerup = MOUSE.CLICK(MOUSE.LEFT, false);
 
@@ -402,24 +412,26 @@
 
         pad.ontouchstart = (e) => {
           let touch_index = (MOUSE.STATE.down && e.touches.length > 1) ? 1 : 0;
-          MOUSE.STATE.move.unshift(new Int32Array([e.touches[touch_index].screenX, e.touches[touch_index].screenY]));
+          MOUSE.STATE.move.unshift(getTouch(e.touches[touch_index]));
+          // debugTouches(e.touches);
         }
         pad.ontouchmove = async (e) => {
           // console.log(e);
+          // debugTouches(e.touches)
+
           let touch_index = (MOUSE.STATE.down && e.touches.length > 1) ? 1 : 0;
-          MOUSE.STATE.move.unshift(new Int32Array([e.touches[touch_index].screenX, e.touches[touch_index].screenY]));
+          MOUSE.STATE.move.unshift(getTouch(e.touches[touch_index]));
           if (MOUSE.STATE.move.length > 2) {
             MOUSE.STATE.move.pop();
           }
 
           let speed = SPEED[padSenditive.value];
-          let data = new Int8Array([
+
+          await ws_send_bytes([
             0,
             limit((MOUSE.STATE.move[0][0] - MOUSE.STATE.move[1][0]) * speed, -128, 127),
             limit((MOUSE.STATE.move[0][1] - MOUSE.STATE.move[1][1]) * speed, -128, 127)
-          ]);
-
-          await ws_send(data);
+            ]);
         };
         pad.ontouchend = async () => {if (MOUSE.STATE.move.length < 2) {
           leftButton.onpointerdown();
@@ -429,16 +441,13 @@
         window.ontouchend = () => {MOUSE.STATE.move = []};
 
       })()
-      </script>
-    </template>
+    </script>
+  </template>
 
-    <script>
-        let ready = 0;
-
-        const sleep = async (t) => new Promise(r => setTimeout(r, t));
-
-      const ws_send = (() => {
-        const ws_url = `ws://${window.location.hostname}:6661`;
+  <script>
+    const ws_send = (() => {
+      let ready = 0;
+      const ws_url = `ws://${window.location.hostname}:6661`;
         // alert(ws_url)
         let socket = null;
 
@@ -467,42 +476,48 @@
           }
           if (ready == 2)
            socket.send(msg);
+       }
+     })();
+
+     const ws_send_bytes = async (data) => await ws_send(new Int8Array(data));
+     const debug = (str) => { console.log(str); ws_send(new TextEncoder().encode('\x03'+JSON.stringify(str)) ); };
+     const sleep = async (t) => new Promise(r => setTimeout(r, t));
+
+     const changeTemplate = (() => {
+      const templates = [
+      templateKeyboard,
+      templateMouse,
+      ];
+
+      return (i) => {
+        while (app.firstChild) app.removeChild(app.lastChild);
+        app.appendChild(templates[i].content.cloneNode(true));
+      }
+    })();
+
+    let resizeBody = (() => {
+      const getOrientation = () => (window.innerHeight > window.innerWidth) | 0;
+      const detail = {orientation: null};
+      const event_orientation = new CustomEvent('orientationchange', {detail});
+
+      return () => {
+        let new_orientation = getOrientation();
+        document.body.style.height = `${window.innerHeight}px`;
+
+        if (new_orientation != detail.orientation) {
+          detail.orientation = new_orientation;
+          window.dispatchEvent(event_orientation);
         }
-      })();
+      }
+    })()
 
-      const ws_send_bytes = async (data) => await ws_send(new Int8Array(data));
-
-      const changeTemplate = (() => {
-        const templates = [
-          templateKeyboard,
-          templateMouse,
-        ];
-
-        return (i) => {
-          while (app.firstChild) app.removeChild(app.lastChild);
-          app.appendChild(templates[i].content.cloneNode(true));
-        }
-      })();
-
-      let resizeBody = (() => {
-        const getOrientation = () => (window.innerHeight > window.innerWidth) | 0;
-        const detail = {orientation: null};
-        const event_orientation = new CustomEvent('orientationchange', {detail});
-
-        return () => {
-          let new_orientation = getOrientation();
-          document.body.style.height = `${window.innerHeight}px`;
-
-          if (new_orientation != detail.orientation) {
-            detail.orientation = new_orientation;
-            window.dispatchEvent(event_orientation);
-          }
-        }
-      })()
-
-      window.addEventListener('resize', resizeBody);
-      window.addEventListener('load', resizeBody);
-      window.addEventListener('orientationchange', (e) => changeTemplate(e.detail.orientation));
-    </script>
-  </body>
+    window.addEventListener('resize', resizeBody);
+    window.addEventListener('load', resizeBody);
+    window.addEventListener('orientationchange', (e) => changeTemplate(e.detail.orientation));
+    window.addEventListener('touchstart', () => {
+      if (!document.fullscreenElement)
+        document.body.requestFullscreen();
+    });
+  </script>
+</body>
 </html>

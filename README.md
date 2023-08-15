@@ -1,18 +1,12 @@
 # Trackpad LAN
 
-![keyboard](./1691320170621.jpg)
-![trackpad](./1691320181918.jpg)
+
+<img src="./1691320181918.jpg" height="400px" style="float:right"></img>
+<img src="./server.jpg" width="400px"></img>
+<img src="./1691320170621.jpg" width="400px"></img>
 
 
 ## Launch server
 
-```console
-python -m venv venv
-source venv/Scripts/activate
-pip install -r requirements.txt
-python server.py
-```
-
-
-## Connect
-http://{IP_LOCAL}:6660
+- Install Python 3
+- Click launch.cmd

@@ -1,4 +1,3 @@
-#!C:\venv\Scripts\python.exe
 # coding: utf-8
 
 import asyncio
@@ -9,6 +8,8 @@ import time
 import struct
 import http.server
 import socketserver
+import io
+from qrcode import QRCode
 
 
 MOUSE_EVENT_DOWN = [win32con.MOUSEEVENTF_LEFTDOWN, win32con.MOUSEEVENTF_MIDDLEDOWN, win32con.MOUSEEVENTF_RIGHTDOWN]
@@ -43,8 +44,8 @@ class WebSocketServer:
             win32api.keybd_event(key, 0, win32con.KEYEVENTF_KEYUP, 0) 
 
     async def handle(self, ws, path):
-        debug(f'nouvelle connexion: [{path}] - {ws}')
-        commands = [self.mouse, self.click, self.keyboard]
+        # debug(f'nouvelle connexion: [{path}] - {ws}')
+        commands = [self.mouse, self.click, self.keyboard, debug]
         try:
             async for raw in ws:
                 try:
@@ -61,7 +62,6 @@ class WebSocketServer:
         debug(f'Server websocket run :{self.port}')
         self.server = serve(self.handle, '0.0.0.0', self.port)
         asyncio.get_event_loop().run_until_complete(self.server)
-        debug("ws stop")
 
     def wait(self):
         try:
@@ -90,18 +90,26 @@ def run_server_http(port):
     debug(f'Server http run: {port}')
     return httpd, th
 
+def qrcode(url):
+    qr = QRCode()
+    qr.add_data(url)
+    f = io.StringIO()
+    qr.print_ascii(out=f, invert=True)
+    f.seek(0)
+    return f.read()
+
+
 if __name__ == '__main__':
     import socket
 
     httpd, th = run_server_http(6660)
-
     ws = WebSocketServer(6661)
-    ws.run()
+    url = f'http://{socket.gethostbyname_ex(socket.gethostname())[-1][-1]}:6660'
 
+    ws.run()
     debug("Trackpad-LAN ready")
-    debug(f'http://{socket.gethostbyname_ex(socket.gethostname())[-1][-1]}:6660')
+    debug(url)
+    print(qrcode(url))
     ws.wait()
     httpd.shutdown()
     th.join()
-
-
